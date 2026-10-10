@@ -567,12 +567,12 @@ h1, h2, h3, h4, h5, h6 {
 .hero {
   position: relative;
   overflow: hidden;
-  height: 60vh;
-  min-height: 420px;
-  max-height: 560px;
+  height: 66vh;
+  min-height: 460px;
+  max-height: 640px;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 30px;
+  padding-bottom: 28px;
   background-color: var(--bg);
 }
 
@@ -585,13 +585,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .hero-video {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
   width: 177.7778vh;
   height: 100vh;
   min-width: 100vw;
   min-height: 56.25vw;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translateX(-50%);
   border: none;
 }
 
@@ -599,7 +599,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: top center;
   transform: scale(1.02);
 }
 
