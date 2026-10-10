@@ -1,0 +1,11 @@
+# Force LF line endings for shell scripts (critical for Docker Linux containers)
+*.sh text eol=lf
+
+# Force LF for SQL files
+*.sql text eol=lf
+
+# Force LF for PHP files
+*.php text eol=lf
+
+# Force LF for .htaccess
+.htaccess text eol=lf
