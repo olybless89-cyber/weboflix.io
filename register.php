@@ -22,7 +22,7 @@ include __DIR__ . '/includes/header.php';
 ?>
 <div class="auth-page">
   <div class="auth-visual">
-    <a href="<?= base_url('index.php') ?>" class="logo"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt=""><span class="logo-text">web<span>oflix</span></span></a>
+    <a href="<?= base_url('index.php') ?>" class="logo"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="Weboflix" class="brand-logo-img"></a>
     <h2>Learn to build. One lesson at a time.</h2>
     <p>Join Weboflix to track your progress and unlock every course as you go.</p>
     <ul class="auth-visual-points">
@@ -33,7 +33,7 @@ include __DIR__ . '/includes/header.php';
   </div>
   <div class="auth-panel">
     <div class="auth-card">
-      <div class="auth-mobile-logo"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt=""> web<span>oflix</span></div>
+      <div class="auth-mobile-logo"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="Weboflix" class="brand-logo-img"></div>
       <h1>Create your account</h1>
       <p class="sub">Start with free courses today. Upgrade anytime.</p>
       <?php if ($error): ?><div class="alert alert-error"><?= h($error) ?></div><?php endif; ?>

@@ -15,7 +15,7 @@ $__adminPage = $__adminPage ?? '';
 </head>
 <body>
 <div class="admin-mobile-bar">
-  <div class="logo"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt=""><span class="logo-text">web<span>oflix</span></span></div>
+  <div class="logo"><a href="<?= base_url('admin/index.php') ?>"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="Weboflix" class="brand-logo-img"></a></div>
   <button class="admin-menu-toggle" id="adminMenuToggle" aria-label="Menu" aria-expanded="false">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
@@ -23,7 +23,7 @@ $__adminPage = $__adminPage ?? '';
 <div class="admin-backdrop" id="adminBackdrop"></div>
 <div class="admin-shell">
   <aside class="admin-sidebar" id="adminSidebar">
-    <div class="logo" style="margin-bottom:28px;"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt=""><span class="logo-text">web<span>oflix</span></span></div>
+    <div class="logo" style="margin-bottom:28px;"><a href="<?= base_url('admin/index.php') ?>"><img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="Weboflix" class="brand-logo-img"></a></div>
     <nav class="admin-nav">
       <a href="<?= base_url('admin/index.php') ?>" class="<?= $__adminPage === 'dashboard' ? 'active' : '' ?>">Dashboard</a>
       <a href="<?= base_url('admin/metrics.php') ?>" class="<?= $__adminPage === 'metrics' ? 'active' : '' ?>">Metrics</a>

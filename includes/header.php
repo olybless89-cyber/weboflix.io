@@ -21,8 +21,7 @@ $__activeSub = $__user ? get_active_subscription((int) $__user['id']) : null;
 <nav class="nav" id="mainNav">
   <div class="nav-inner">
     <a href="<?= base_url('index.php') ?>" class="logo" aria-label="Weboflix Home">
-      <img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="" class="brand-logo-img">
-      <span class="logo-text">WEBO<span>FLIX</span></span>
+      <img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="Weboflix" class="brand-logo-img">
     </a>
     
     <div class="nav-links">

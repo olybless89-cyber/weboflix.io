@@ -140,17 +140,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .brand-logo-img {
-  height: 22px;
+  height: 28px;
   width: auto;
-  max-width: 32px;
+  max-width: 44px;
   object-fit: contain;
   display: block;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .logo:hover .brand-logo-img {
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 8px rgba(80, 115, 246, 0.6));
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 10px rgba(80, 115, 246, 0.6));
 }
 
 .hero-badge-logo {
