@@ -36,7 +36,7 @@ include __DIR__ . '/includes/header.php';
 <div class="course-banner" style="background-image: url('<?= h($bannerImg) ?>');">
   <div class="container" style="max-width:960px;">
     <div class="netflix-badge-pill">
-      <span class="n-logo">W</span>
+      <img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="" class="hero-badge-logo">
       <span class="series-text">SERIES &bull; <?= strtoupper(h($course['category_name'])) ?></span>
     </div>
     <h1><?= h($course['title']) ?></h1>

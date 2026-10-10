@@ -146,8 +146,8 @@ include __DIR__ . '/includes/header.php';
   <div class="container hero-inner">
     <?php if ($featured): ?>
       <div class="netflix-badge-pill">
-        <span class="n-logo">W</span>
-        <span class="series-text">SERIES &bull; WEBOFLIX ORIGINAL</span>
+        <img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="" class="hero-badge-logo">
+        <span class="series-text">ORIGINAL SERIES</span>
       </div>
 
       <h1><?= h($featured['title']) ?></h1>
@@ -173,7 +173,7 @@ include __DIR__ . '/includes/header.php';
       </div>
     <?php else: ?>
       <div class="netflix-badge-pill">
-        <span class="n-logo">W</span>
+        <img src="<?= base_url('assets/img/logo-mark.png') ?>" alt="" class="hero-badge-logo">
         <span class="series-text">MASTERCLASS STREAMING</span>
       </div>
       <h1>Build Real Tech Products.</h1>
