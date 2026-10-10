@@ -22,13 +22,19 @@ $courseStmt = db()->prepare(
 $continueWatching = [];
 if ($user) {
     $cwStmt = db()->prepare(
-        "SELECT DISTINCT c.*,
+        "SELECT c.*,
             (SELECT l.id FROM lessons l JOIN modules m ON m.id = l.module_id WHERE m.course_id = c.id ORDER BY m.sort_order ASC, l.sort_order ASC LIMIT 1) AS first_lesson_id,
             (SELECT l.youtube_id FROM lessons l JOIN modules m ON m.id = l.module_id WHERE m.course_id = c.id ORDER BY m.sort_order ASC, l.sort_order ASC LIMIT 1) AS first_youtube_id
-         FROM lesson_progress lp
-         JOIN courses c ON c.id = lp.course_id
-         WHERE lp.user_id = ?
-         ORDER BY lp.updated_at DESC LIMIT 8"
+         FROM courses c
+         JOIN (
+             SELECT course_id, MAX(updated_at) AS last_watched_at
+             FROM lesson_progress
+             WHERE user_id = ?
+             GROUP BY course_id
+         ) lp_recent ON lp_recent.course_id = c.id
+         WHERE c.is_published = 1
+         ORDER BY lp_recent.last_watched_at DESC
+         LIMIT 8"
     );
     $cwStmt->execute([$user['id']]);
     $continueWatching = $cwStmt->fetchAll();
