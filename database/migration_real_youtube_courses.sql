@@ -41,6 +41,8 @@ VALUES (
 
 SET @course1_id = (SELECT id FROM courses WHERE slug = 'build-ecommerce-website-with-ai' LIMIT 1);
 
+DELETE FROM modules WHERE course_id = @course1_id;
+
 -- Modules for Course 1
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES
 (@course1_id, 'Getting Started with AI Commerce', 'Setting up your AI workspace and generating store foundations.', 'free', 1),
@@ -89,6 +91,8 @@ VALUES (
 
 SET @course2_id = (SELECT id FROM courses WHERE slug = 'create-courier-logistics-website' LIMIT 1);
 
+DELETE FROM modules WHERE course_id = @course2_id;
+
 -- Modules for Course 2
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES
 (@course2_id, 'Logistics Architecture & Theme Setup', 'Setting up WordPress and the free logistics framework.', 'free', 1),
@@ -136,6 +140,8 @@ VALUES (
     is_published = 1;
 
 SET @course3_id = (SELECT id FROM courses WHERE slug = 'build-charity-donation-website' LIMIT 1);
+
+DELETE FROM modules WHERE course_id = @course3_id;
 
 -- Modules for Course 3
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES

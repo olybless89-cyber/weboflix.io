@@ -103,28 +103,31 @@ CREATE TABLE lesson_progress (
 ) ENGINE=InnoDB;
 
 -- ---------- Seed: categories ----------
-INSERT INTO categories (name, slug, sort_order) VALUES
-('Web Development', 'web-development', 1),
-('Artificial Intelligence', 'artificial-intelligence', 2),
-('Cybersecurity', 'cybersecurity', 3),
-('Mobile Development', 'mobile-development', 4),
-('Cloud & DevOps', 'cloud-devops', 5);
+INSERT IGNORE INTO categories (id, name, slug, sort_order) VALUES
+(1, 'Web Development', 'web-development', 1),
+(2, 'Artificial Intelligence', 'artificial-intelligence', 2),
+(3, 'Cybersecurity', 'cybersecurity', 3),
+(4, 'Mobile Development', 'mobile-development', 4),
+(5, 'Cloud & DevOps', 'cloud-devops', 5);
 
 -- ---------- Seed: admin user (password: admin123 - CHANGE IMMEDIATELY) ----------
 -- Hash generated with password_hash('admin123', PASSWORD_DEFAULT)
-INSERT INTO users (name, email, password_hash, is_admin) VALUES
+INSERT IGNORE INTO users (name, email, password_hash, is_admin) VALUES
 ('Admin', 'admin@weboflix.io', '$2y$10$w3Q5nW.7e7EFfZ28V5cvCuA//YqnkyVbTxVjTHkrGyd.0pTLyqhry', 1);
 
 -- ---------- Seed: Real Courses from Web Oracle with actual YouTube videos ----------
 -- Course 1 (Featured on Homepage Hero)
 INSERT INTO courses (category_id, title, slug, description, thumbnail_url, banner_url, level, is_published, is_featured, sort_order) VALUES
-(2, 'How to Build an E-Commerce Website With AI in 20 Minutes', 'build-ecommerce-website-with-ai',
+((SELECT id FROM categories WHERE slug = 'artificial-intelligence' LIMIT 1),
+ 'How to Build an E-Commerce Website With AI in 20 Minutes', 'build-ecommerce-website-with-ai',
  'Step-by-step masterclass on building a complete, high-converting online e-commerce store in just 20 minutes using cutting-edge AI tools. Master prompt engineering, instant product catalogs, checkout flows, and automated launch strategies with Web Oracle.',
  'https://i.ytimg.com/vi/EUfyzKqmZbk/maxresdefault.jpg',
  'https://i.ytimg.com/vi/EUfyzKqmZbk/maxresdefault.jpg',
- 'beginner', 1, 1, 1);
+ 'beginner', 1, 1, 1)
+ON DUPLICATE KEY UPDATE title = VALUES(title), is_featured = 1, is_published = 1;
 
-SET @c1 = LAST_INSERT_ID();
+SET @c1 = (SELECT id FROM courses WHERE slug = 'build-ecommerce-website-with-ai' LIMIT 1);
+DELETE FROM modules WHERE course_id = @c1;
 
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES
 (@c1, 'Getting Started with AI Commerce', 'Setting up your AI workspace and generating store foundations.', 'free', 1),
@@ -132,10 +135,10 @@ INSERT INTO modules (course_id, title, description, access_level, sort_order) VA
 (@c1, 'Payment Integration & Cart Setup', 'Connecting secure payment gateways and checkout optimizations.', 'premium', 3),
 (@c1, 'Live Store Launch & Traffic Strategy', 'Domain setup, SEO indexing, and launching in 20 minutes.', 'premium', 4);
 
-SET @c1_m1 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 1);
-SET @c1_m2 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 2);
-SET @c1_m3 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 3);
-SET @c1_m4 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 4);
+SET @c1_m1 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 1 LIMIT 1);
+SET @c1_m2 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 2 LIMIT 1);
+SET @c1_m3 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 3 LIMIT 1);
+SET @c1_m4 = (SELECT id FROM modules WHERE course_id = @c1 AND sort_order = 4 LIMIT 1);
 
 INSERT INTO lessons (module_id, title, youtube_id, duration_seconds, description, sort_order) VALUES
 (@c1_m1, 'Welcome & AI Tools Overview', 'EUfyzKqmZbk', 300, 'Introduction to the 20-minute AI e-commerce workflow and tools.', 1),
@@ -149,13 +152,16 @@ INSERT INTO lessons (module_id, title, youtube_id, duration_seconds, description
 
 -- Course 2: Courier & Logistics Website
 INSERT INTO courses (category_id, title, slug, description, thumbnail_url, banner_url, level, is_published, is_featured, sort_order) VALUES
-(1, 'How to Create a Courier or Logistics Website (Free Theme)', 'create-courier-logistics-website',
+((SELECT id FROM categories WHERE slug = 'web-development' LIMIT 1),
+ 'How to Create a Courier or Logistics Website (Free Theme)', 'create-courier-logistics-website',
  'Comprehensive guide on creating a professional cargo, shipment, and courier logistics website using WordPress. Features live shipment tracking numbers, freight rate calculators, dispatcher portals, and custom quote forms.',
  'https://i.ytimg.com/vi/6xbGLvcMRjQ/maxresdefault.jpg',
  'https://i.ytimg.com/vi/6xbGLvcMRjQ/maxresdefault.jpg',
- 'intermediate', 1, 0, 2);
+ 'intermediate', 1, 0, 2)
+ON DUPLICATE KEY UPDATE title = VALUES(title), is_published = 1;
 
-SET @c2 = LAST_INSERT_ID();
+SET @c2 = (SELECT id FROM courses WHERE slug = 'create-courier-logistics-website' LIMIT 1);
+DELETE FROM modules WHERE course_id = @c2;
 
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES
 (@c2, 'Logistics Platform Foundations', 'Setting up WordPress and the free logistics framework.', 'free', 1),
@@ -163,10 +169,10 @@ INSERT INTO modules (course_id, title, description, access_level, sort_order) VA
 (@c2, 'Freight Rate Calculator & Quotes', 'Automated pricing calculation based on weight, distance and cargo.', 'premium', 3),
 (@c2, 'Client Portal & Shipment Management', 'Customer shipment history, printable waybills, and notification alerts.', 'premium', 4);
 
-SET @c2_m1 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 1);
-SET @c2_m2 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 2);
-SET @c2_m3 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 3);
-SET @c2_m4 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 4);
+SET @c2_m1 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 1 LIMIT 1);
+SET @c2_m2 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 2 LIMIT 1);
+SET @c2_m3 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 3 LIMIT 1);
+SET @c2_m4 = (SELECT id FROM modules WHERE course_id = @c2 AND sort_order = 4 LIMIT 1);
 
 INSERT INTO lessons (module_id, title, youtube_id, duration_seconds, description, sort_order) VALUES
 (@c2_m1, 'Logistics Website Blueprint & Theme Setup', '6xbGLvcMRjQ', 360, 'Selecting the right free theme and setting up site structure.', 1),
@@ -180,13 +186,16 @@ INSERT INTO lessons (module_id, title, youtube_id, duration_seconds, description
 
 -- Course 3: Charity & Donation Website
 INSERT INTO courses (category_id, title, slug, description, thumbnail_url, banner_url, level, is_published, is_featured, sort_order) VALUES
-(1, 'How I Built a Professional Charity Donation Website With WordPress', 'build-charity-donation-website',
+((SELECT id FROM categories WHERE slug = 'web-development' LIMIT 1),
+ 'How I Built a Professional Charity Donation Website With WordPress', 'build-charity-donation-website',
  'Learn how to create a high-trust non-profit and charity donation website using WordPress. Implement visual campaign progress bars, recurring monthly donations, donor recognition walls, and automated tax receipts that inspire trust.',
  'https://i.ytimg.com/vi/mykCOktgKZk/maxresdefault.jpg',
  'https://i.ytimg.com/vi/mykCOktgKZk/maxresdefault.jpg',
- 'intermediate', 1, 0, 3);
+ 'intermediate', 1, 0, 3)
+ON DUPLICATE KEY UPDATE title = VALUES(title), is_published = 1;
 
-SET @c3 = LAST_INSERT_ID();
+SET @c3 = (SELECT id FROM courses WHERE slug = 'build-charity-donation-website' LIMIT 1);
+DELETE FROM modules WHERE course_id = @c3;
 
 INSERT INTO modules (course_id, title, description, access_level, sort_order) VALUES
 (@c3, 'Non-Profit Design & Trust Fundamentals', 'Structure, visual hierarchy, and credibility cues for non-profits.', 'free', 1),
@@ -194,10 +203,10 @@ INSERT INTO modules (course_id, title, description, access_level, sort_order) VA
 (@c3, 'Multi-Currency Donation Engine', 'Setting up one-time and recurring monthly gifts with instant payment.', 'premium', 3),
 (@c3, 'Donor Management, Receipts & Impact Pages', 'Automated receipts, donor walls, and transparent impact reports.', 'premium', 4);
 
-SET @c3_m1 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 1);
-SET @c3_m2 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 2);
-SET @c3_m3 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 3);
-SET @c3_m4 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 4);
+SET @c3_m1 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 1 LIMIT 1);
+SET @c3_m2 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 2 LIMIT 1);
+SET @c3_m3 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 3 LIMIT 1);
+SET @c3_m4 = (SELECT id FROM modules WHERE course_id = @c3 AND sort_order = 4 LIMIT 1);
 
 INSERT INTO lessons (module_id, title, youtube_id, duration_seconds, description, sort_order) VALUES
 (@c3_m1, 'Charity Website Architecture & Theme Selection', 'mykCOktgKZk', 380, 'Choosing a lightweight, accessible theme for humanitarian causes.', 1),
