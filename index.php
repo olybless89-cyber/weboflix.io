@@ -45,6 +45,20 @@ $recData = get_recommended_courses($user ? (int)$user['id'] : null, 10);
 $recommendations = $recData['courses'];
 $recommendationTitle = $recData['reason'];
 
+// New on Weboflix (Recently added courses)
+$newOnWeboflix = db()->query(
+    "SELECT c.*, cat.name AS category_name,
+        (SELECT COUNT(*) FROM lessons l JOIN modules m ON m.id = l.module_id WHERE m.course_id = c.id) AS lesson_count,
+        (SELECT COUNT(*) FROM modules m WHERE m.course_id = c.id AND m.access_level = 'free') AS free_modules,
+        (SELECT l.id FROM lessons l JOIN modules m ON m.id = l.module_id WHERE m.course_id = c.id ORDER BY m.sort_order ASC, l.sort_order ASC LIMIT 1) AS first_lesson_id,
+        (SELECT l.youtube_id FROM lessons l JOIN modules m ON m.id = l.module_id WHERE m.course_id = c.id ORDER BY m.sort_order ASC, l.sort_order ASC LIMIT 1) AS first_youtube_id
+     FROM courses c
+     JOIN categories cat ON cat.id = c.category_id
+     WHERE c.is_published = 1
+     ORDER BY c.created_at DESC, c.id DESC
+     LIMIT 10"
+)->fetchAll();
+
 // Top 10 courses
 $top10 = db()->query(
     "SELECT c.*, cat.name AS category_name,
@@ -309,6 +323,63 @@ include __DIR__ . '/includes/header.php';
           <?php endforeach; ?>
         </div>
         <button class="slider-btn next" data-slider-target="slider-recs" aria-label="Scroll right">&#10095;</button>
+      </div>
+    </section>
+  <?php endif; ?>
+
+  <!-- New on Weboflix Row (Recently Added Masterclasses) -->
+  <?php if (!empty($newOnWeboflix)): ?>
+    <section class="row-section" id="new-releases">
+      <div class="row-header">
+        <h2 class="row-title">New on Weboflix <span class="title-arrow">&gt;</span></h2>
+        <span class="row-view-all">Recently Added</span>
+      </div>
+      <div class="row-slider-container">
+        <button class="slider-btn prev" data-slider-target="slider-new" aria-label="Scroll left">&#10094;</button>
+        <div class="row-slider" id="slider-new">
+          <?php foreach ($newOnWeboflix as $c):
+              $isFree = $c['free_modules'] > 0;
+              $thumb = $c['thumbnail_url'] ?: 'https://i.ytimg.com/vi/' . ($c['first_youtube_id'] ?: 'EUfyzKqmZbk') . '/maxresdefault.jpg';
+          ?>
+          <div class="netflix-card" onclick="wfOpenQuickModal(<?= (int) $c['id'] ?>)">
+            <div class="card-media">
+              <img src="<?= h($thumb) ?>" alt="<?= h($c['title']) ?>" loading="lazy">
+              <span class="card-ribbon <?= $isFree ? 'free' : 'premium' ?>"><?= $isFree ? 'Free Lessons' : 'Premium' ?></span>
+            </div>
+            <div class="card-details">
+              <div class="card-action-bar">
+                <div class="card-action-left">
+                  <?php if ($c['first_lesson_id']): ?>
+                  <a href="<?= base_url('watch.php?lesson=' . $c['first_lesson_id']) ?>" class="btn-card-action btn-card-play" onclick="event.stopPropagation();" <?= $user ? '' : 'data-auth-gate' ?>>
+                    <svg width="12" height="12" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+                  </a>
+                  <?php endif; ?>
+                  <button type="button" class="btn-card-action" title="Add to My List" onclick="event.stopPropagation(); wfToggleMyList(<?= (int) $c['id'] ?>, this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <button type="button" class="btn-card-action" title="I like this" onclick="event.stopPropagation(); wfLikeCard(this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                  </button>
+                </div>
+                <button type="button" class="btn-card-action" title="More Info" onclick="event.stopPropagation(); wfOpenQuickModal(<?= (int) $c['id'] ?>)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+              <div class="card-info-title"><?= h($c['title']) ?></div>
+              <div class="card-info-meta">
+                <span class="hero-match-score" style="font-weight:800;color:var(--netflix-green);">NEW</span>
+                <span class="badge-quality">4K</span>
+                <span><?= $c['lesson_count'] ?> lessons</span>
+              </div>
+              <div class="card-tags-list">
+                <span><?= ucfirst($c['level']) ?></span>
+                <span><?= h($c['category_name']) ?></span>
+              </div>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <button class="slider-btn next" data-slider-target="slider-new" aria-label="Scroll right">&#10095;</button>
       </div>
     </section>
   <?php endif; ?>
