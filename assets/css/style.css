@@ -628,9 +628,25 @@ h1, h2, h3, h4, h5, h6 {
 .hero-inner {
   position: relative;
   z-index: 10;
-  max-width: 480px;
+  max-width: 460px;
   padding-top: 20px;
   padding-bottom: 0;
+  margin-left: 0;
+  margin-right: auto;
+  text-align: left;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+}
+
+/* Fainty write-up when hovered over hero video to enjoy uninterrupted playback */
+.hero:hover .hero-inner {
+  opacity: 0.3;
+}
+
+/* Full crisp visibility when hovering directly on the write-up / buttons */
+.hero-inner:hover,
+.hero:hover .hero-inner:hover,
+.hero-inner:focus-within {
+  opacity: 1 !important;
 }
 
 /* Netflix Original / Series Badge */
