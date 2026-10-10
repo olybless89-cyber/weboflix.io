@@ -13,6 +13,13 @@
  * =====================================================================
  */
 
+// Load env vars written by docker-entrypoint.sh at container startup.
+// Apache mod_php does NOT inherit Docker/Railway env vars automatically,
+// so the entrypoint pre-populates /tmp/wf_railway_env.php with putenv() calls.
+if (file_exists('/tmp/wf_railway_env.php')) {
+    require_once '/tmp/wf_railway_env.php';
+}
+
 // Helper to get environment variables with fallback
 function wf_env(string $key, ?string $default = null): ?string {
     $val = getenv($key);
