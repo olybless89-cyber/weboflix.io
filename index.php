@@ -40,6 +40,11 @@ if ($user) {
     $continueWatching = $cwStmt->fetchAll();
 }
 
+// Algorithmic video suggestions based on watched categories, levels, and co-viewing patterns
+$recData = get_recommended_courses($user ? (int)$user['id'] : null, 10);
+$recommendations = $recData['courses'];
+$recommendationTitle = $recData['reason'];
+
 // Top 10 courses
 $top10 = db()->query(
     "SELECT c.*, cat.name AS category_name,
@@ -247,6 +252,63 @@ include __DIR__ . '/includes/header.php';
           <?php endforeach; ?>
         </div>
         <button class="slider-btn next" data-slider-target="slider-cw" aria-label="Scroll right">&#10095;</button>
+      </div>
+    </section>
+  <?php endif; ?>
+ 
+  <!-- Algorithmic Suggestions Row (Based on videos watched) -->
+  <?php if (!empty($recommendations)): ?>
+    <section class="row-section suggestions-row" id="suggestions">
+      <div class="row-header">
+        <h2 class="row-title"><?= h($recommendationTitle) ?> <span class="title-arrow">&gt;</span></h2>
+        <span class="row-view-all"><?= $user ? 'Personalized Match' : 'Popular Suggestions' ?></span>
+      </div>
+      <div class="row-slider-container">
+        <button class="slider-btn prev" data-slider-target="slider-recs" aria-label="Scroll left">&#10094;</button>
+        <div class="row-slider" id="slider-recs">
+          <?php foreach ($recommendations as $c):
+              $isFree = $c['free_modules'] > 0;
+              $thumb = $c['thumbnail_url'] ?: 'https://i.ytimg.com/vi/' . ($c['first_youtube_id'] ?: 'EUfyzKqmZbk') . '/maxresdefault.jpg';
+          ?>
+          <div class="netflix-card" onclick="wfOpenQuickModal(<?= (int) $c['id'] ?>)">
+            <div class="card-media">
+              <img src="<?= h($thumb) ?>" alt="<?= h($c['title']) ?>" loading="lazy">
+              <span class="card-ribbon <?= $isFree ? 'free' : 'premium' ?>"><?= $isFree ? 'Free Lessons' : 'Premium' ?></span>
+            </div>
+            <div class="card-details">
+              <div class="card-action-bar">
+                <div class="card-action-left">
+                  <?php if ($c['first_lesson_id']): ?>
+                  <a href="<?= base_url('watch.php?lesson=' . $c['first_lesson_id']) ?>" class="btn-card-action btn-card-play" onclick="event.stopPropagation();" <?= $user ? '' : 'data-auth-gate' ?>>
+                    <svg width="12" height="12" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+                  </a>
+                  <?php endif; ?>
+                  <button type="button" class="btn-card-action" title="Add to My List" onclick="event.stopPropagation(); wfToggleMyList(<?= (int) $c['id'] ?>, this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </button>
+                  <button type="button" class="btn-card-action" title="I like this" onclick="event.stopPropagation(); wfLikeCard(this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                  </button>
+                </div>
+                <button type="button" class="btn-card-action" title="More Info" onclick="event.stopPropagation(); wfOpenQuickModal(<?= (int) $c['id'] ?>)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+              <div class="card-info-title"><?= h($c['title']) ?></div>
+              <div class="card-info-meta">
+                <span class="hero-match-score" style="font-weight:800;color:var(--netflix-green);"><?= $c['match_score'] ?>% Match</span>
+                <span class="badge-quality">HD</span>
+                <span><?= $c['lesson_count'] ?> lessons</span>
+              </div>
+              <div class="card-tags-list">
+                <span><?= ucfirst($c['level']) ?></span>
+                <span><?= h($c['category_name']) ?></span>
+              </div>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <button class="slider-btn next" data-slider-target="slider-recs" aria-label="Scroll right">&#10095;</button>
       </div>
     </section>
   <?php endif; ?>

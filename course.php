@@ -141,6 +141,37 @@ include __DIR__ . '/includes/header.php';
   </div>
   <?php endforeach; ?>
 
+  <?php
+    $relatedData = get_recommended_courses($user ? (int)$user['id'] : null, 4, (int)$course['id']);
+    $related = $relatedData['courses'];
+    if ($related):
+  ?>
+  <div style="margin-top:52px; padding-top:28px; border-top:1px solid var(--border-soft);">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+      <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.01em;">More Like This</h2>
+      <span style="font-size:12px; color:var(--text-dim);">Suggested for your learning path</span>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:18px;">
+      <?php foreach ($related as $rel):
+          $rThumb = $rel['thumbnail_url'] ?: 'https://i.ytimg.com/vi/' . ($rel['first_youtube_id'] ?: 'EUfyzKqmZbk') . '/maxresdefault.jpg';
+          $isRelFree = $rel['free_modules'] > 0;
+      ?>
+      <a href="<?= base_url('course.php?slug=' . urlencode($rel['slug'])) ?>" class="netflix-card" style="display:block; text-decoration:none; transform:none; transition:transform 0.2s, box-shadow 0.2s;">
+        <div class="card-media" style="position:relative; aspect-ratio:16/9; border-radius:4px; overflow:hidden;">
+          <img src="<?= h($rThumb) ?>" alt="<?= h($rel['title']) ?>" style="width:100%; height:100%; object-fit:cover;">
+          <span class="card-ribbon <?= $isRelFree ? 'free' : 'premium' ?>"><?= $isRelFree ? 'Free Lessons' : 'Premium' ?></span>
+        </div>
+        <div style="padding:10px 4px 4px;">
+          <div style="font-size:11px; font-weight:800; color:var(--netflix-green); margin-bottom:4px;"><?= $rel['match_score'] ?>% Match &bull; <?= ucfirst($rel['level']) ?></div>
+          <div style="font-size:14px; font-weight:700; color:#fff; line-height:1.3; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;"><?= h($rel['title']) ?></div>
+          <div style="font-size:12px; color:var(--text-dim);"><?= h($rel['category_name']) ?> &bull; <?= $rel['lesson_count'] ?> lessons</div>
+        </div>
+      </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+  <?php endif; ?>
+
   <?php if (!$user): ?>
     <div class="alert alert-error" style="margin-top:32px;">
       <a href="<?= base_url('register.php') ?>" style="color:inherit;font-weight:700;">Create a free account</a> to track your progress and unlock all premium modules with a subscription.
