@@ -29,6 +29,7 @@ $__adminPage = $__adminPage ?? '';
       <a href="<?= base_url('admin/metrics.php') ?>" class="<?= $__adminPage === 'metrics' ? 'active' : '' ?>">Metrics</a>
       <a href="<?= base_url('admin/categories.php') ?>" class="<?= $__adminPage === 'categories' ? 'active' : '' ?>">Categories</a>
       <a href="<?= base_url('admin/courses.php') ?>" class="<?= $__adminPage === 'courses' ? 'active' : '' ?>">Courses</a>
+      <a href="<?= base_url('admin/youtube-sync.php') ?>" class="<?= $__adminPage === 'youtube-sync' ? 'active' : '' ?>">⚡ YouTube Auto-Sync</a>
       <a href="<?= base_url('admin/users.php') ?>" class="<?= $__adminPage === 'users' ? 'active' : '' ?>">Users</a>
       <a href="<?= base_url('admin/subscriptions.php') ?>" class="<?= $__adminPage === 'subscriptions' ? 'active' : '' ?>">Subscriptions</a>
       <a href="<?= base_url('index.php') ?>" style="margin-top:16px; display:block; border-top:1px solid var(--border-soft); padding-top:14px;">&larr; View site</a>

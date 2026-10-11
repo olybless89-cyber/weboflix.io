@@ -88,7 +88,10 @@ $courses = db()->query(
 )->fetchAll();
 ?>
 
-<div class="admin-topbar"><h1>Courses</h1></div>
+<div class="admin-topbar">
+  <h1>Courses</h1>
+  <a class="btn btn-primary btn-sm" href="<?= base_url('admin/youtube-sync.php') ?>">⚡ YouTube Auto-Sync</a>
+</div>
 
 <div class="table-wrap" style="margin-bottom:28px;">
   <table>
